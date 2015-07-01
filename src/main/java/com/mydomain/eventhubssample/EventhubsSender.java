@@ -31,10 +31,10 @@ public class EventhubsSender {
 		this.ttl = ttl;
 	}
 
-	public void send(DeviceDto dto) {
+	public HttpResponse send(DeviceDto dto) {
 		HttpClient client = new DefaultHttpClient();
-		HttpPost post = new HttpPost("https://" + this.resourceUri + "/"
-				+ ehName + "/messages");
+		HttpPost post = new HttpPost(String.format("https://%s/%s/messages",
+				this.resourceUri, ehName));
 		post.setHeader("Content-type",
 				"application/atom+xml;type=entry;charset=utf-8");
 		try {
@@ -46,20 +46,19 @@ public class EventhubsSender {
 			post.setHeader("Authorization", SASTokenGenerator.GetSASToken(
 					resourceUri, senderKey, senderKeyName, ttl));
 
-			HttpResponse response = client.execute(post);
-			System.out.println(response);
+			return client.execute(post);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 }

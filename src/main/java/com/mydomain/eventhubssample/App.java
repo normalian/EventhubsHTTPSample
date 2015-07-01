@@ -16,11 +16,11 @@ public class App {
 		dto.setTemplatture("39.8");
 
 		Date date = new Date(115, 6, 3, 11, 0);
-		EventhubsSender sender = new EventhubsSender(
-				"<servicebus name>",
-				"<eventhub name>",
-				"<servicekey>", "<policy name>",
-				date);
-		sender.send(dto);
+		EventhubsSender sender = new EventhubsSender( 
+ 				"<servicebus name>", 
+ 				"<eventhub name>", 
+ 				"<servicekey>", "<policy name>", 
+ 				date); 
+		System.out.println(sender.send(dto));
 	}
 }
