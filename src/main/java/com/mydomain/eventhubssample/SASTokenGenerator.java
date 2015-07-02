@@ -5,7 +5,7 @@ import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import javax.crypto.Mac;
@@ -14,7 +14,7 @@ import javax.xml.bind.DatatypeConverter;
 
 public class SASTokenGenerator {
 	public static String GetSASToken(String resourceUri, String senderKey,
-			String senderKeyName, Date ttl) {
+			String senderKeyName, ZonedDateTime ttl) {
 		try {
 			String expiry = GetExpiry(ttl);
 			String stringToSign = URLEncoder.encode(resourceUri, "UTF-8")
@@ -32,10 +32,9 @@ public class SASTokenGenerator {
 		}
 	}
 
-	private static String GetExpiry(Date ttl) {
-		long offset = Calendar.getInstance().get(Calendar.ZONE_OFFSET)
-				+ Calendar.getInstance().get(Calendar.DST_OFFSET);
-		return new Long((long) ((ttl.getTime() + offset) / 1000)).toString();
+	private static String GetExpiry(ZonedDateTime ttl) {
+		return String
+				.valueOf((long) (Date.from(ttl.toInstant()).getTime() / 1000));
 	}
 
 	private static String computeMacSha256(String key, final String stringToSign)

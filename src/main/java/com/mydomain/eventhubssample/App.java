@@ -1,6 +1,7 @@
 package com.mydomain.eventhubssample;
 
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import com.mydomain.eventhubssample.dto.DeviceDto;
@@ -15,12 +16,10 @@ public class App {
 		dto.setDeviceId(UUID.randomUUID().toString());
 		dto.setTemplatture("39.8");
 
-		Date date = new Date(115, 6, 3, 11, 0);
-		EventhubsSender sender = new EventhubsSender( 
- 				"<servicebus name>", 
- 				"<eventhub name>", 
- 				"<servicekey>", "<policy name>", 
- 				date); 
+		// 3 days after
+		ZonedDateTime ttl = ZonedDateTime.now(ZoneId.of("UTC")).plusDays(3);
+		EventhubsSender sender = new EventhubsSender("<servicebus name>",
+				"<eventhub name>", "<servicekey>", "<policy name>", ttl);
 		System.out.println(sender.send(dto));
 	}
 }

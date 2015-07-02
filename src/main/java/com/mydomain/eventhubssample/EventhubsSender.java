@@ -2,6 +2,7 @@ package com.mydomain.eventhubssample;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import org.apache.http.HttpResponse;
@@ -20,10 +21,10 @@ public class EventhubsSender {
 	String ehName;
 	String senderKey;
 	String senderKeyName;
-	Date ttl;
+	ZonedDateTime ttl;
 
 	public EventhubsSender(String resourceUri, String ehName, String senderKey,
-			String senderKeyName, Date ttl) {
+			String senderKeyName, ZonedDateTime ttl) {
 		this.resourceUri = resourceUri;
 		this.ehName = ehName;
 		this.senderKey = senderKey;
