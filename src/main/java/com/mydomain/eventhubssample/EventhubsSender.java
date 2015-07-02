@@ -47,15 +47,6 @@ public class EventhubsSender {
 					resourceUri, senderKey, senderKeyName, ttl));
 
 			return client.execute(post);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);

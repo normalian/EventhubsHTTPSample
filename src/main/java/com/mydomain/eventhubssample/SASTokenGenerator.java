@@ -15,19 +15,21 @@ import javax.xml.bind.DatatypeConverter;
 public class SASTokenGenerator {
 	public static String GetSASToken(String resourceUri, String senderKey,
 			String senderKeyName, Date ttl) {
-		String expiry = GetExpiry(ttl);
-		String stringToSign = URLEncoder.encode(resourceUri) + "\n" + expiry;
-		String signature = "";
 		try {
-			signature = computeMacSha256(senderKey, stringToSign);
-		} catch (InvalidKeyException e) {
+			String expiry = GetExpiry(ttl);
+			String stringToSign = URLEncoder.encode(resourceUri, "UFF-8")
+					+ "\n" + expiry;
+			String signature = computeMacSha256(senderKey, stringToSign);
+			String sasToken = String.format(
+					"SharedAccessSignature sr=%s&sig=%s&se=%s&skn=%s",
+					URLEncoder.encode(resourceUri, "UTF-8"),
+					URLEncoder.encode(signature, "UTF-8"), expiry,
+					senderKeyName);
+			return sasToken;
+		} catch (UnsupportedEncodingException | InvalidKeyException e) {
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-		String sasToken = String.format(
-				"SharedAccessSignature sr=%s&sig=%s&se=%s&skn=%s",
-				URLEncoder.encode(resourceUri), URLEncoder.encode(signature),
-				expiry, senderKeyName);
-		return sasToken;
 	}
 
 	private static String GetExpiry(Date ttl) {
@@ -38,24 +40,15 @@ public class SASTokenGenerator {
 
 	private static String computeMacSha256(String key, final String stringToSign)
 			throws InvalidKeyException {
-		Mac mc = null;
 		try {
-			mc = Mac.getInstance("HmacSHA256");
+			Mac mc = Mac.getInstance("HmacSHA256");
 			Key key256 = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
 			mc.init(key256);
-		} catch (NoSuchAlgorithmException e1) {
-			throw new IllegalArgumentException();
-		} catch (UnsupportedEncodingException e) {
+			byte[] utf8Bytes = stringToSign.getBytes("UTF-8");
+			return DatatypeConverter.printBase64Binary(mc.doFinal(utf8Bytes));
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-
-		byte[] utf8Bytes = null;
-		try {
-			utf8Bytes = stringToSign.getBytes("UTF-8");
-		} catch (final UnsupportedEncodingException e) {
-			throw new IllegalArgumentException(e);
-		}
-
-		return DatatypeConverter.printBase64Binary(mc.doFinal(utf8Bytes));
 	}
 }
