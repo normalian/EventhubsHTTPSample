@@ -10,8 +10,7 @@ import java.util.Date;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
-import com.microsoft.azure.storage.core.Base64;
+import javax.xml.bind.DatatypeConverter;
 
 public class SASTokenGenerator {
 	public static String GetSASToken(String resourceUri, String senderKey,
@@ -57,6 +56,6 @@ public class SASTokenGenerator {
 			throw new IllegalArgumentException(e);
 		}
 
-		return Base64.encode(mc.doFinal(utf8Bytes));
+		return DatatypeConverter.printBase64Binary(mc.doFinal(utf8Bytes));
 	}
 }
