@@ -17,7 +17,7 @@ public class SASTokenGenerator {
 			String senderKeyName, Date ttl) {
 		try {
 			String expiry = GetExpiry(ttl);
-			String stringToSign = URLEncoder.encode(resourceUri, "UFF-8")
+			String stringToSign = URLEncoder.encode(resourceUri, "UTF-8")
 					+ "\n" + expiry;
 			String signature = computeMacSha256(senderKey, stringToSign);
 			String sasToken = String.format(
