@@ -18,8 +18,9 @@ public class App {
 
 		// 3 days after
 		ZonedDateTime ttl = ZonedDateTime.now(ZoneId.of("UTC")).plusDays(3);
-		EventhubsSender sender = new EventhubsSender("<servicebus name>",
-				"<eventhub name>", "<servicekey>", "<policy name>", ttl);
+		EventhubsSender<DeviceDto> sender = new EventhubsSender<>(
+				"<servicebus name>", "<eventhub name>", "<servicekey>",
+				"<policy name>", ttl);
 		System.out.println(sender.send(dto));
 	}
 }

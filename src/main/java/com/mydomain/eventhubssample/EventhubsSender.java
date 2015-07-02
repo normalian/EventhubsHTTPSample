@@ -1,22 +1,17 @@
 package com.mydomain.eventhubssample;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mydomain.eventhubssample.dto.DeviceDto;
 
-public class EventhubsSender {
+public class EventhubsSender<T> {
 	String resourceUri;
 	String ehName;
 	String senderKey;
@@ -32,7 +27,7 @@ public class EventhubsSender {
 		this.ttl = ttl;
 	}
 
-	public HttpResponse send(DeviceDto dto) {
+	public HttpResponse send(T dto) {
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(String.format("https://%s/%s/messages",
 				this.resourceUri, ehName));
