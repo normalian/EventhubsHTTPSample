@@ -6,11 +6,11 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.time.ZonedDateTime;
+import java.util.Base64;
 import java.util.Date;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 
 public class SASTokenGenerator {
 	public static String GetSASToken(String resourceUri, String senderKey,
@@ -44,7 +44,8 @@ public class SASTokenGenerator {
 			Key key256 = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
 			mc.init(key256);
 			byte[] utf8Bytes = stringToSign.getBytes("UTF-8");
-			return DatatypeConverter.printBase64Binary(mc.doFinal(utf8Bytes));
+			byte[] encripted = mc.doFinal(utf8Bytes);
+			return Base64.getMimeEncoder().encodeToString(encripted);
 		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
